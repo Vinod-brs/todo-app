@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://kit.fontawesome.com/3da1a747b2.js"></script>
+    <title>Todo Lists</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="d-flex bg-gradient">
+        <div class="d-flex flex-grow-1">
+          <nav class="courseTitle">
+            <button class="navbar-brand border-0">
+              <img src="img/logo.png" alt="logo" />
+            </button>
+          </nav>
+          <div class="flex-grow-1">
+            <div class="ReactTitle ps-3 d-flex align-items-center">
+              <img src="https://w7.pngwing.com/pngs/452/24/png-transparent-js-logo-node-logos-and-brands-icon-thumbnail.png" alt="logo" />
+              <h3 class="mb-0">Node JS Apps</h3>
+            </div>
+            <div class="d-flex ps-3 align-items-center">
+              <div class="flex-grow-1">
+                <h4>Todo Tasks</h4>
+                <p class="pb-0 mb-0 text-start">
+                  Purpose: Todo Tasks using NodeJS
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="container pt-5">
+      <form action="/addtask" method="POST">
+        <div class="card">
+          <div class="card-body">
+              <div class="form-group">
+                <input type="text" name="newtask" class="form-control" placeholder="Add New Task" />
+              </div>
+              <button class="mt-2 btn btn-success">Add</button>
+          </div>
+        </div>
+
+        <div class="task">
+          <div>
+            <h2> Added Task </h2>
+            <div class="form-group form-check">
+              <% for( var i = 0; i < task.length; i++){ %>
+                
+                <li class="m-0">
+                  <button formaction="/removetask" type="submit" id="top" class="btn text-black m-0 px-2">
+                  <input type="checkbox"  name="check" class="myCheckbox form-check-input" value = "<%= task[i] %>" id = "<%= task[i] %>" />
+                  <label for="<%= task[i] %>"><%= task[i] %></label>
+                  </button>
+                </li>
+             
+              <% } %>
+            </div>
+            <button disabled  formaction="/removetask" type="submit" id="myButton" class="btn  text-white <%= (task.length) ? 'btn-info' : 'btn-danger' %>  mt-2"><%= (task.length) ? "Complete" : "No tasks" %> </button>
+          </div>
+          <div>
+            <h2> Completed task </h2>
+            <div class="form-group form-check">
+              <table>
+            <% for(var i = 0; i < complete.length; i++){ %>
+              <tr class="hover">
+                <td>
+                  <button formaction="/adtask?t=<%= complete[i] %>" type="submit" id="top" class="btn text-black m-0 px-2">
+                    <li class="m-2"><input disabled type="checkbox" class="form-check-input"  checked /> <%= complete[i] %> </li>
+                  </button>
+                </td>
+                <td>
+                  <button formaction="/dtask?delete=<%= complete[i] %>" type="submit" id="top" class="btn text-black m-0 p-0"><i class="fas fa-trash"></i></button> 
+                </td>
+              </tr>
+            <% } %>
+          </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <footer class="footer footer-dark">
+      <div class="d-flex justify-content-between px-5">
+        <div>ALL RIGHTS RESERVED BRS STUDIO</div>
+        <div>
+          <div>
+            <button onclick="setTheme('#1A4B84')" class="theme-switch theme-switch-chathams_blue"></button>
+            <button onclick="setTheme('#991E14')" class="theme-switch theme-switch-tamarillo"></button>
+            <button onclick="setTheme('#FEAD06')" class="theme-switch theme-switch-yellow_sea"></button>
+        </div>
+        </div>
+        <div>
+          <img src="img/footer-logo.png" alt="logo" />
+        </div>
+      </div>
+    </footer>
+    <script>
+
+      // Get references to the checkboxes and button
+    const checkboxes = document.querySelectorAll('.myCheckbox');
+    const button = document.getElementById('myButton');
+
+// Function to check if any checkbox is checked
+      function checkCheckboxes() {
+          const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+          button.disabled = !isChecked;
+      }
+
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', checkCheckboxes);
+      });
+      
+
+
+      // Change Theme
+      function setTheme(theme) {
+          document.documentElement.style.setProperty("--primary-color", theme);
+          localStorage.setItem("movie-theme", theme);
+      }
+      setTheme(localStorage.getItem("movie-theme") || '#1A4B84');
+    </script>
+</body>
+
+</html>
